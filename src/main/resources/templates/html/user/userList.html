@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>유저 라스트</title>
+</head>
+<body>
+	<table border="1">
+		<tr>
+			<th>유저 번호</th>
+			<th>유저 이름</th>
+			<th>유저 아이디</th>
+			<th>유저 비밀번호</th>
+			<th>유저 생성 날짜</th>			
+		</tr>
+		<tbody id="tbody"></tbody>
+	</table>
+	<button onclick="location.href='/html/user/userInsert'">회원가입</button>
+</body>
+
+<script>
+	
+	window.addEventListener('load', async function(){
+		const res = await fetch('/selectUsers');
+		const user = await res.json();
+		let html = '';
+		for(const users of user){
+		html += '<tr>';
+		html += `<th>${users.uiNum}</th>`;
+		html += `<th>${users.uiName}</th>`;
+		html += `<th><a href="/html/user/userView?uiNum=${users.uiNum}">${users.uiId}</th>`;
+		html += `<th>${users.uiPwd}</th>`;
+		html += `<th>${users.credat}</th>`;
+		html += '</tr>';
+		}
+		document.querySelector('#tbody').innerHTML = html;
+	});
+</script>
+</html>

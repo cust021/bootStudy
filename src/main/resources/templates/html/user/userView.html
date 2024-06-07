@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>상세 정보</title>
+</head>
+<body>
+	
+	<table border="1">
+		<tr>
+			<th>유저번호</th>
+			<th>유저이름</th>
+			<th>유저아이디</th>
+			<th>유저패스워드</th>
+			<th>생성 날짜</th>
+		</tr>
+		<tbody id="tbody"></tbody>
+	</table>
+	<button onclick="location.href=`/html/user/userUpdate?uiNum=${uiNum}`">수정</button>
+	<button onclick="deleteUser()">삭제</button>
+	<button onclick="location.href='/html/user/userList'">리스트로 돌아가기</button>
+</body>
+
+<script>
+	const uiNum = `[[${param.uiNum}]]`;
+	
+	window.addEventListener('load',async function(){
+		const response = await fetch(`/userView/${uiNum}`);
+		const view = await response.json();
+		let html ='';
+		html += '<tr>';
+		html += `<th>${view.uiNum}</th>`;
+		html += `<th>${view.uiName}</th>`;
+		html += `<th>${view.uiId}</th>`;
+		html += `<th>${view.uiPwd}</th>`;
+		html += `<th>${view.credat}</th>`;
+		html += '</tr>';
+		
+		document.querySelector('#tbody').innerHTML = html;
+	});
+	
+	
+	async function deleteUser(){
+		const response = await fetch(`/userView/${uiNum}`);
+		const view = await response.json();
+		if(confirm(`유저 ${view.uiName} 을(를)삭제 하시겠습니끼?`)){
+		const res = await fetch(`/deleteUser/${uiNum}`,{
+			method : 'DELETE',
+			body: JSON.stringify(`${uiNum}`),
+			headers :{
+				'Content-Type' : 'application/json;charset=UTF-8'
+			}
+		});
+		
+		if(res.ok){
+			alert("삭제 완료");
+			location.href="/html/user/userList";
+		}else{
+			alert("삭제 실패 오류 발생");
+		}
+		}
+	}
+</script>
+</html>

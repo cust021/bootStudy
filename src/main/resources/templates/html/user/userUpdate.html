@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>유저 데이터 수정</title>
+</head>
+<body>
+	<table border="1">
+		<tr>
+			<th>유저 이름</th>
+			<th>유저 아이디</th>
+			<th>유저 비밀번호</th>
+		</tr>
+		<tbody id="tbody"></tbody>
+	</table>
+	<button onclick="UserUpdate()">수정</button>
+	
+</body>
+
+<script>
+	const uiNum = `[[${param.uiNum}]]`;
+	
+	window.addEventListener('load',async function(){
+		const res = await fetch(`/userView/${uiNum}`);
+		const view = await res.json();
+		let html = '';
+		html += '<tr>';
+		html += `<th><input type="text" id="uiName" value="${view.uiName}"> </th>`;
+		html += `<th><input type="text" id="uiId" value="${view.uiId}"> </th>`;
+		html += `<th><input type="text" id="uiPwd" value="${view.uiPwd}"> </th>`;
+		html += '</tr>';
+		
+		document.querySelector('#tbody').innerHTML = html;
+	});
+	
+	
+	async function UserUpdate(){
+		const data ={
+			uiNum: uiNum,
+			uiName : uiName.value,
+			uiId : uiId.value,
+			uiPwd : uiPwd.value
+		};
+		
+		const res = await fetch('/updateUser',{
+			method : 'PATCH',
+			body: JSON.stringify(data),
+			headers : {
+				'Content-Type' : 'application/json;charset=UTF-8'
+			}
+		});
+		
+		if(res.ok){
+			alert("수정 완료");
+			location.href = "/html/user/userList";
+		}else{
+			alert("수정 실패 오류 발생");
+		}
+	}
+</script>
+</html>
